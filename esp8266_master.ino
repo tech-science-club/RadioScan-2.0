@@ -1,3 +1,5 @@
+// esp8266 is set as master device. It recieve slave's sensor data
+
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
@@ -7,7 +9,7 @@
 const char* ssid = "Kviknet-5A55";
 const char* password = "7HBXLQWCTQ77NT";
 const char* SERVER_NAME = "http://radioscan.atwebpages.com/sensordata.php";
-String PROJECT_API_KEY = "12345";
+String PROJECT_API_KEY = "************";
 
 #define LOG_PERIOD 3600000
 
@@ -32,23 +34,12 @@ void setup() {
 }
 
 void loop() {
-  //cound_impulses();
+ 
   incom_data();
   post_to_web();
     
 }
-void cound_impulses(){
-  
-  
-  
-//  for (int i = 0; i<11; i++){
-//    if (i == 10){
-//    Serial.println(radiation);
-//    Serial.println("************************");
-//    }
-//    }
-    
-}
+
 void post_to_web(){
   
   radiation += rad.toInt();
