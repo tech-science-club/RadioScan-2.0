@@ -3,7 +3,7 @@ Radiation detector based on Arduino platform + Python Kivy FrameWork
 
 This app is extended modification of previous App RadioScan. New features are:
 - arduino Mega 2560 board as main board
-- esp 8266 as wifi shield
+- esp 8266 Node mcu as wifi shield
 - gps Neo6v2 module to record gps data of place where mesurements are bieng taken.
 
 Main idea to use Arduino Mega 2560 board was to use its wide possibilities to interact with 4 hardware serial communication. 
