@@ -1,0 +1,533 @@
+Root:
+	BottomBar:                  # ------------------> bottom navigation bar with 4 elements, particularly screens
+		id:bottom_bar
+	    panel_color: 1,1,1,0.25
+	    selected_color_background: "blue"
+	    text_color_active: "blue"
+	    text_color_normal: 0,0,0,1
+	    canvas.after:           #------------------> frame of bottom navigation box
+			Color:
+			    rgba: 0, 1, 0, 1
+			Line:
+				rounded_rectangle: (1, 1, 798,65, 5,5,5,5)  # Set position (x, y) and size (width, height)
+				width: 2  # Set line width
+				joint: 'round'  # Set joint type for rounded corners
+
+		#--------- 1st screen content-----------------------------------------------
+
+	    MDBottomNavigationItem:
+	        name: 'screen 1'
+	        text: 'Activity'
+	        text_color: "yellow"
+	        icon: 'radiation.png'
+			
+			on_tab_press:
+				root.ids.activity.on_enter()
+
+			on_leave:
+				root.ids.activity.on_leave()
+
+			Real_time_activity:
+				id: activity
+
+			#--------- 2nd screen content-----------------------------------------------
+
+	    MDBottomNavigationItem:
+	        name: 'screen 2'
+	        text: 'Bar chart'
+	        text_color: "yellow"
+	        icon: 'bar-chart.png'
+		
+			on_tab_press:
+				root.ids.bar.start_bar_plotting()
+
+			on_leave:
+				root.ids.bar.bar_plot_stop()
+
+	        Bar:
+	            id: bar
+	    	#--------- 3d screen content-----------------------------------------------
+
+	    MDBottomNavigationItem:
+	        name: 'screen 3'
+	        text: 'Stat. data'
+	        text_color: "yellow"   
+	        icon: 'statistics.png'
+
+	        Data_base:
+
+		#--------- 4th screen content-----------------------------------------------
+
+		MDBottomNavigationItem:
+	        name: 'screen 4'
+	        text: 'Map'
+	        icon: 'map2.png'
+
+			on_tab_press:
+				root.ids.map.begin()
+			on_leave:
+				root.ids.map.map_close()
+
+	        Map:
+	            id: map
+
+	# -----------> top bar with title of app
+	MDTopAppBar:
+		md_bg_color: "green"
+		#title: "Radiation activity"
+		pos_hint: {"x": 0, "y": 0.9}
+		MDFloatLayout:
+			pos_hint: {"center_x": 0.5, "center_y": 0.5}
+			MDLabel:
+				text: "RadioScan"
+				halign: "center"
+				valign: "top"
+				theme_text_color: "Custom"
+				text_color: "white"
+				font_size: 34
+				pos_hint: {"x": 0, "y": 0.5}
+
+#--------------------> 1st screen.
+#       Actually represents momentary radiation activity. We can observe relevant temperature,
+#       detected radioactive particles pr sec, momentarily detected particular activity converted to amount pr hour on the left side of screen
+#
+					   # ------------------- 1 st screen settings 
+<Real_time_activity>:
+	name: 'screen 1'
+	degr: 0
+	angl: 0
+	rad_level: "  "
+	MDFloatLayout:
+	    size_hint: 1, 0.6
+	    pos_hint: {"x": 0, "y": 0.25}
+	    canvas.before:
+	        Color:
+	            rgba: 0.1,0.25, 0.3, 1
+	        Ellipse:
+	            size: 400, 400
+	            pos: self.width/2-200, self.height/2 - 150
+	            angle_start: 235
+	            angle_end: 360+125
+
+	        Color:
+	            rgba: 0, 1, 0, 1
+	        Ellipse:
+	            size: 400, 400
+	            pos: self.width/2-200, self.height/2 - 150
+	            angle_start: 235
+	            angle_end: 235 + root.degr
+	        Color:
+	            rgba: 1,1,1,1
+	        Ellipse:
+	            size: 350, 350
+	            pos: self.width/2-175, self.height/2 - 125
+	            angle_start:  235
+	            angle_end: 360+125
+
+	        Color:
+	            rgba: 1,1,1,1
+	        Ellipse:
+	            size: 350, 350
+	            pos: self.width/2-175, self.height/2 - 125
+	        Color:
+	            rgba: 187/225, 221/225, 248/255, 1
+	        Ellipse:
+	            size: 400, 400
+	            pos: self.width/2-200, self.height/2 - 150
+	            angle_start: 125
+	            angle_end: 235
+
+		MDFloatLayout:
+			Image:
+				id: arrow
+	            source: "arrow3.png"
+	            pos: 309, 127
+	            size_hint: None, None
+	            size: 150+150*0.2, 200+200*0.2
+	            #opacity: 0.5
+	            canvas.before:
+	                PushMatrix
+	                Rotate:
+	                    angle: 125 - root.degr #
+	                    origin: 399, 209
+	                    axis: 0,0,1
+			
+	            canvas.after:
+	                PopMatrix
+
+		MDFloatLayout:
+
+	        MDLabel:
+				id: rad_level
+	            halign: "center"
+	            pos_hint: {"center_x": 0.5, "center_y": 0.3}
+	            font_size: 48
+
+	MDFloatLayout:
+		Image:
+			pos_hint: {"center_x": 0.036, "center_y": 0.75}
+			source: "thermometer.png"
+			size_hint: 0.075,0.075
+
+		MDLabel:
+			pos_hint: {"center_x": 0.12, "center_y": 0.75}
+			halign: "center"
+			id: temp_text
+			text: "temperature "
+			font_size: 24
+		Image:
+			pos_hint: {"center_x": 0.036, "center_y": 0.6}
+			source: "radiation2.png"
+			size_hint: 0.05, 0.05
+
+		MDGridLayout:
+			id: grid_dose
+			size_hint: 0.3, 0.15
+			pos_hint: {"center_x": 0.17, "center_y": 0.6}
+			cols: 2
+			rows: 1
+			#adaptive_width: True
+			
+
+			MDLabel:
+				#pos_hint: {"center_x": 0.13, "center_y": 0.6}
+				halign: "center"
+				id: radiation_dose
+				font_size: 24
+				#size_hint_x: None
+				#size: self.texture_size
+			MDLabel:
+				id: units
+				pos_hint: {"x": 0, "y": 0.6}
+				halign: "left"
+				text: " 1/h"
+				font_size: 18
+
+
+		MDLabel:
+			pos_hint: {"center_x": 0.09, "center_y": 0.05}
+			halign: "center"
+			id: timer
+			text: "timer"
+			font_name: 'TickingTimebombBB'
+
+		Image:
+			id: atom_pic
+			pos_hint: {"x": 0.9, "y": 0.75}
+			source: "atom.png"
+			size_hint: 0.12,0.12
+
+
+ # ------------------- 2nd screen settings
+ # -------------------- radiation activity displayed in plot shape. Average radiation activity converted from momental one
+ #                      to pr 1 hour on Y axes. Time in sec on X axes
+
+<Bar>:
+	name: 'screen 3'
+	chart_box: chart_box
+	MDBoxLayout:
+		#orientation: "vertical"
+		id: chart_box
+	    size_hint: 1, 1
+	    pos_hint: {"center_x": 0.5, "center_y": 0.35}
+
+# ------------------- 3d screen settings
+#-------------------- this screen lets to get data from database and display radiation activity, temperature throughout
+#                     chosen period of time.
+#
+
+<Data_base>:
+	name: 'screen 3'
+	MDBoxLayout:
+		size_hint: 1, 1
+		pos_hint: {"center_x": 0.5, "center_y": 0.38}
+		orientation: "vertical"
+		MDBoxLayout:
+			canvas.before:
+				Color:
+				    rgba: 1, 1, 1, 1
+				Rectangle:
+				    size: self.size
+				    pos: self.pos
+			size_hint: 1, 0.85
+
+			orientation: "horizontal"
+	    	MDBoxLayout:
+
+	    	    id: main_box
+	    		size_hint: 0.78, 1
+	    		pos_hint: {"center_x": 0.5, "center_y": 0.48}
+	    		canvas.before:
+	    			Color:
+	    			    rgba: 1, 1, 1, 1
+	    			Rectangle:
+	    			    size: self.size
+	    			    pos: self.pos
+	    	    MDLabel:
+	    	        id: main_text
+	    	        text: "data is loading"
+					pos_hint: {"center_x": 0.5, "center_y": 0.5}
+					halign: "center"
+
+	    	MDBoxLayout:
+	    	    orientation: "vertical"
+	    		size_hint: 0.22, 1
+	    	    canvas.before:
+	    	    	Color:
+	    	    	    rgba: 1, 1, 1, 1
+	    	    	Rectangle:
+	    	    	    size: self.size
+	    	    	    pos: self.pos
+
+	    	    MDGridLayout:
+	    	        cols: 1
+	    	        spacing: 10,10
+	    	        padding: 10,10,10,10
+
+					MDRectangleFlatButton:
+						size_hint: .5, 1
+					    text: "Choose time"
+					    text_color: "black"
+					    theme_text_color: "Custom"
+
+					    line_color: "red"
+					    on_press: root.show_time_picker()
+
+
+					MDRectangleFlatButton:
+						size_hint: .5, 1
+					    text: "Choose date"
+					    text_color: "black"
+					    theme_text_color: "Custom"
+
+					    line_color: "red"
+					    on_press: root.call_dialog()
+
+					MDRectangleFlatButton:
+						size_hint: .5, 1
+					    text: "Load rad/temp data"
+					    text_color: "black"
+					    theme_text_color: "Custom"
+
+					    line_color: "red"
+					    on_press: root.load_data()
+					MDRectangleFlatButton:
+						size_hint: .5, 1
+					    text: "Reset"
+					    theme_text_color: "Custom"
+					    text_color: "black"
+
+					    line_color: "red"
+					    on_press: root.reset()
+					MDRectangleFlatButton:
+						size_hint: .5, 1
+					    text: "---"
+					    theme_text_color: "Custom"
+					    text_color: "black"
+
+					    line_color: "red"
+					    on_press: root.reset()
+
+				MDFloatLayout:
+				    canvas.before:
+				    	Color:
+				    	    rgba: 1, 1, 1, 1
+				    	Rectangle:
+						    size: self.size
+						    pos: self.pos
+					id: red_box
+					MDLabel:
+						pos_hint: {"x": 0.05, "y": 0.35}
+						#id: time
+						text: "time: "
+						font_size: "24"
+					MDLabel:
+						pos_hint: {"x": 0.05, "y": 0.2}
+						id: time
+						text: " ---"
+						#font_size: "24"
+
+					MDLabel:
+						pos_hint: {"x": 0.05, "y": 0}
+						#id: dates
+						text: "date:"
+						font_size: "24"
+					MDLabel:
+						pos_hint: {"x": 0.05, "y": -0.2}
+						id: dates
+						text: "---"
+						#font_size: "24"
+
+		MDBoxLayout:
+			size_hint: 1, 0.10
+			canvas.before:
+				Color:
+				    rgba: 0/255, 148/255, 250/255, 1
+				Rectangle:
+				    size: self.size
+				    pos: self.pos
+# ------------------- 4th screen settings
+#-------------------- depicts relevant gps data of devise
+<Map>:
+	name: "Screen 4"
+
+	MapView:
+		id: map
+		size_hint: 1, 1
+		pos_hint: {"center_x": 0.5, "center_y": 0.4}
+		zoom: 8
+
+
+
+		MapMarkerPopup:
+			lat: root.lat
+			lon: root.lon
+            MDFloatLayout:
+				pos_hint: {"x": 0.65, "y": -0.5}
+				size_hint: None, None
+				size: 200, 75
+			    canvas:
+			        Color:
+			            rgba: 0.1,0.25, 0.3, 0.5
+			        RoundedRectangle:
+			            size: self.size
+			            pos: self.pos
+			            radius: 20,20,20,20
+					Color:
+					    rgba: 0,1, 0, 0.75
+				MDLabel:
+			        id: average_rad
+			        halign: "left"
+			        pos_hint: {"x": 0.1, "y": 0.2}
+			        text: "Activity:"
+			        theme_text_color: "Custom"
+			        text_color: "white"
+			    MDLabel:
+				    id: date
+				    halign: "left"
+				    pos_hint: {"x": 0.1, "y": -0.15}
+				    text: "Date:"
+				    theme_text_color: "Custom"
+				    text_color: "white"
+
+
+	MDFloatLayout:
+		pos_hint: {"center_x": 0.5, "center_y": 0.45}
+		size_hint: 1, 0.05
+
+
+    MDFloatLayout:
+        canvas:
+            Color:
+	            rgba: 0.1,0.25, 0.3, 0.5
+	        RoundedRectangle:
+	            size: self.size
+	            pos: self.pos
+	            radius: 20,20,20,20
+			Color:
+			    rgba: 0,1, 0, 0.75
+
+			Line:
+				rounded_rectangle: (596, 406, 200, 68,20,20,20,20)  # Set position (x, y) and size (width, height)
+				width: 1.5  # Set line width
+				joint: 'round'  # Set joint type for rounded corners
+
+        size_hint: 0.25, 0.12
+        pos_hint: {"center_x": 0.87, "center_y": 0.82}
+	    MDLabel:
+	        id: lat
+	        halign: "left"
+	        pos_hint: {"x": 0.1, "y": 0.2}
+	        text: "latitude:"
+	        theme_text_color: "Custom"
+	        text_color: "white"
+	    MDLabel:
+	        id: lon
+	        halign: "left"
+	        pos_hint: {"x": 0.1, "y": -0.2}
+	        text: "longitude: "
+	        theme_text_color: "Custom"
+            text_color: "white"
+
+#----------> timepicker settings, popup windows which allow to set time in hours and specific days
+
+<Time_picker>:
+
+	start_hr: start_hr
+	pos_hint: {"x":0, "y":0.55}
+	orientation: "vertical"
+	padding: "10dp"
+	size_hint_y: None
+	height: "110dp"
+	MDFloatLayout:
+		pos_hint: {"x": 0, "y": .20}
+        MDLabel:
+        	text: "Set period"
+            pos_hint: {"x": 0, "y": -0.1}
+            halign: "center"
+            valign: "top"
+            font_size: "24"
+
+
+
+	MDGridLayout:
+		pos_hint: {"center_x":0.4, "center_y":0.5}
+		size_hint: 1, 0.75
+		cols: 4
+		rows: 2
+
+		MDFloatLayout:
+
+			MDLabel:
+				id: start_lbl
+				text: " start: "
+				pos_hint: {"center_x": 0.4, "center_y": 0.5}
+				valign: 'bottom'
+				halign: 'right'
+				font_size: "20"
+
+
+		HourTextField:
+			#size_hint: 1, 0.9
+			id: start_hr
+	        hint_text: "Hour"
+		    mode: "rectangle"
+
+		    input_filter: 'int'
+
+		Widget:
+			size_hint_x: 0.1
+
+		MinuteTextField:
+			#size_hint: 1, 0.9
+			id: start_min
+	        hint_text: "Min"
+	        mode: "rectangle"
+	        input_filter: 'int'
+
+
+		MDFloatLayout:
+	        MDLabel:
+	            id: lbl
+				text: "end: "
+				pos_hint: {"center_x": 0.4, "center_y": 0.5}
+				font_size: "20"
+				halign: 'right'
+
+
+		HourTextField:
+			#size_hint: 1, 0.9
+			id: end_hr
+	        hint_text: "Hour"
+		    mode: "rectangle"
+		    input_filter: 'int'
+
+		Widget:
+			size_hint_x: 0.1
+
+		MinuteTextField:
+			#size_hint: 1, 0.9
+			id: end_min
+	        hint_text: "Min"
+	        mode: "rectangle"
+	        input_filter: 'int'
