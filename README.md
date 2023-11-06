@@ -29,7 +29,8 @@ It is my first progect, so don't balme me so hard :D
 
 Screen 1
 
-![Screen_1](https://github.com/techmadman/RadioScan-2.0/assets/130900888/8ee53189-5b80-4b88-9764-e183e113f847)
+![Screen_1](https://github.com/techmadman/RadioScan-2.0/assets/130900888/dfe6584a-280d-49fe-818d-13ac8b504822)
+
 
 Screen 2
 
