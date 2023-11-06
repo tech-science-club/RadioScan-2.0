@@ -7,16 +7,24 @@ This app is extended modification of previous App RadioScan. New features are:
 - gps Neo6v2 module to record gps data of place where mesurements are bieng taken.
 
 Main idea to use Arduino Mega 2560 board was to use its wide possibilities to interact with 4 hardware serial communication. 
-connection with esp 8266 was established via I2C protocol and wire.h library
+connection with esp 8266 was established via I2C protocol and wire.h library. 
+Esp 8266 was asigned as master, atmega 2560 as slave. Slave's task is to take data from sensors, send it in pakages to master. 
+master takes data from pakege, count detected events of registered particles and sent relevant data of events number, t and gps to web server.
+Using awardspace.net possibilities we post our data into web table and simultaniously fill in database. having web page with data it is so easy to treat, 
+extract data as we wish with Python aroachments. 
  
 Main dificulties were to make boards work together. But these were overcome. 
 
-
+Hardware parts:
 dht11 temperature sensor
 bluetooth HC-05
-Arduino Geiger counter kit with J305 tube Softwar.
+Arduino Geiger counter kit with J305 tube.
+Arduino Mega 2560
+ESP8266 Node mcu
+GPS neo6v2 sensor
 
-There are available 4 screens:
+
+There are available 4 screens in Python App:
 -real time measurement
 -real time activity in plot mode
 -reaching data from databese and build plot with information within desirable scopes
